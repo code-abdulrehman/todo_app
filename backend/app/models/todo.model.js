@@ -10,6 +10,23 @@ const Todo = sequelize.define("Todo", {
     type: DataTypes.BOOLEAN,
     defaultValue: false,
   },
+  description: {
+    type: DataTypes.TEXT,
+    allowNull: false,
+  },
+  priority: {
+    type: DataTypes.STRING,
+  },
+  createdAt: {
+    type: DataTypes.DATE,
+    allowNull: false,
+    defaultValue: DataTypes.NOW,
+  },
+  updatedAt: {
+    type: DataTypes.DATE,
+    allowNull: false,
+    defaultValue: DataTypes.NOW,
+  },
 });
 
 export default Todo;

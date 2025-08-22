@@ -10,11 +10,33 @@ export const getAllTodos = async (req, res) => {
   }
 };
 
+// Get todo by id
+export const getTodoById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const todo = await Todo.findByPk(id);
+    res.json(todo);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+// Get todo by title
+export const getTodoByTitle = async (req, res) => {
+  try {
+    const { title } = req.params;
+    const todo = await Todo.findOne({ where: { title } });
+    res.json(todo);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
 // Create new todo
 export const createTodo = async (req, res) => {
   try {
-    const { title } = req.body;
-    const todo = await Todo.create({ title });
+    const { title, description, priority } = req.body;
+    const todo = await Todo.create({ title, description, priority });
     res.json(todo);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -25,13 +47,15 @@ export const createTodo = async (req, res) => {
 export const updateTodo = async (req, res) => {
   try {
     const { id } = req.params;
-    const { title, completed } = req.body;
+    const { title, completed, description, priority } = req.body;
 
     const todo = await Todo.findByPk(id);
     if (!todo) return res.status(404).json({ error: "Todo not found" });
 
     todo.title = title ?? todo.title;
     todo.completed = completed ?? todo.completed;
+    todo.description = description ?? todo.description;
+    todo.priority = priority ?? todo.priority;
     await todo.save();
 
     res.json(todo);
