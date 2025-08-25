@@ -1,10 +1,16 @@
 import React, { useState, useRef, useEffect } from "react";
 import { BsThreeDotsVertical } from "react-icons/bs";
 
-const TodoItem = ({ title, description, priority, isCompleted, date }) => {
+const TodoItem = ({ todo, onUpdateTodo, onDeleteTodo, onEditTodo, onCompleteTodo }) => {
+  const { title, description, priority, completed, createdAt } = todo;
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
 
+
+  const handleDeleteTodo = () => {
+    onDeleteTodo(todo.id);
+    setDropdownOpen(false);
+  };
   // Helper to get priority color
   const getPriorityColor = (priority) => {
     switch (priority) {
@@ -36,13 +42,13 @@ const TodoItem = ({ title, description, priority, isCompleted, date }) => {
       <div className="flex items-start gap-4">
         <input
           type="checkbox"
-          checked={isCompleted}
-          readOnly
+          checked={completed || false}
           className="aspect-square accent-accent checked:outline-2 checked:outline-accent h-5 w-5 mt-1"
+          onChange={() => onCompleteTodo(todo)}
         />
         <div className="flex flex-col w-full">
-          <span className="text-white text-md font-bold">{title}</span>
-          <span className="text-white text-sm font-lato-regular">{description}</span>
+          <span className={`text-white text-md font-bold ${completed ? "line-through decoration-2 decoration-primary" : ""}`}>{title}</span>
+          <span className={`text-white text-sm font-lato-regular ${completed ? "line-through decoration-2 decoration-primary" : ""}`}>{description}</span>
           <div className="flex gap-2 mt-2 justify-between">
             <span
               className={`text-white rounded-lg px-2 py-1 text-xs font-semibold ${getPriorityColor(
@@ -51,7 +57,7 @@ const TodoItem = ({ title, description, priority, isCompleted, date }) => {
             >
               {priority}
             </span>
-            <span className="text-white text-sm font-lato-regular">{date}</span>
+            <span className={`text-white text-sm font-lato-regular ${completed ? "underline decoration-2 decoration-primary" : ""}`}>{new Date(createdAt).toLocaleDateString()}</span>
           </div>
         </div>
       </div>
@@ -65,9 +71,11 @@ const TodoItem = ({ title, description, priority, isCompleted, date }) => {
         </button>
         {dropdownOpen && (
           <div className="absolute right-10 top-0 mt-2 w-32 bg-primary text-white rounded-md shadow-lg z-10 flex flex-col py-1 border border-accent/10">
-            <button className="px-4 py-2 text-left hover:bg-accent/30 w-full text-sm rounded-md">Edit</button>
+            <button className="px-4 py-2 text-left hover:bg-accent/30 w-full text-sm rounded-md" onClick={() => {
+              onEditTodo(todo);
+            }}>Edit</button>
             <hr className="border-accent/10 mx-1" />
-            <button className="px-4 py-2 text-left hover:bg-accent/30 w-full text-sm rounded-md">Delete</button>
+            <button className="px-4 py-2 text-left hover:bg-accent/30 w-full text-sm rounded-md" onClick={handleDeleteTodo}>Delete</button>
           </div>
         )}
       </div>

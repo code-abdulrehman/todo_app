@@ -21,16 +21,6 @@ export const getTodoById = async (req, res) => {
   }
 };
 
-// Get todo by title
-export const getTodoByTitle = async (req, res) => {
-  try {
-    const { title } = req.params;
-    const todo = await Todo.findOne({ where: { title } });
-    res.json(todo);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-};
 
 // Create new todo
 export const createTodo = async (req, res) => {

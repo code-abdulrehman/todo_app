@@ -1,137 +1,253 @@
 # Todo App
-
-A full-stack todo application with React frontend and Express.js backend with PostgreSQL database.
-
-## Backend Setup
-
-### Database Setup
-```bash
-# Connect to PostgreSQL
-psql -U postgres
-
-# Create user and database
-CREATE USER todo_user WITH ENCRYPTED PASSWORD '12345';
-CREATE DATABASE todo_app OWNER todo_user;
-GRANT ALL PRIVILEGES ON DATABASE todo_app TO todo_user;
-```
-
-### Backend Installation & Run
-```bash
-cd backend
-pnpm i
-pnpm dev
-```
-
-## API Endpoints
-
-### Base URL: `http://localhost:5000/todos`
-
-### 1. Get All Todos
-```bash
-curl -X GET http://localhost:5000/todos
-```
-
-### 2. Get Todo by ID
-```bash
-curl -X GET http://localhost:5000/todos/1
-```
-
-### 3. Get Todo by Title
-```bash
-curl -X GET http://localhost:5000/todos/title/Learn%20Express.js
-```
-
-### 4. Create a New Todo
-```bash
-curl -X POST http://localhost:5000/todos \
-  -H "Content-Type: application/json" \
-  -d '{
-    "title": "Learn Express.js",
-    "description": "Study Express.js framework and build REST APIs",
-    "priority": "high"
-  }'
-```
-
-### 5. Create Another Todo
-```bash
-curl -X POST http://localhost:5000/todos \
-  -H "Content-Type: application/json" \
-  -d '{
-    "title": "Build a REST API",
-    "description": "Create a complete REST API with Express and PostgreSQL",
-    "priority": "medium"
-  }'
-```
-
-### 6. Update Todo (Mark as Completed)
-```bash
-curl -X PUT http://localhost:5000/todos/1 \
-  -H "Content-Type: application/json" \
-  -d '{
-    "completed": true
-  }'
-```
-
-### 7. Update Todo (Change Title and Description)
-```bash
-curl -X PUT http://localhost:5000/todos/2 \
-  -H "Content-Type: application/json" \
-  -d '{
-    "title": "Build a REST API with Express",
-    "description": "Create a complete REST API with Express, PostgreSQL, and proper error handling",
-    "priority": "high"
-  }'
-```
-
-### 8. Update Todo Priority
-```bash
-curl -X PUT http://localhost:5000/todos/1 \
-  -H "Content-Type: application/json" \
-  -d '{
-    "priority": "low"
-  }'
-```
-
-### 9. Delete a Todo
-```bash
-curl -X DELETE http://localhost:5000/todos/1
-```
-
-### 10. Get All Todos (After Changes)
-```bash
-curl -X GET http://localhost:5000/todos
-```
-
-## Todo Model Schema
-
-```javascript
-{
-  id: Number (auto-increment),
-  title: String (required),
-  description: String (required),
-  priority: String (optional: "low", "medium", "high"),
-  completed: Boolean (default: false),
-  createdAt: Date (auto-generated),
-  updatedAt: Date (auto-generated)
-}
-```
-
-## Frontend Setup
-
-```bash
-cd frontend
-pnpm i
-pnpm dev
-```
+<img src="image.png" alt="app-demo"/>
+A full-stack Todo application built with React (Frontend) and Express.js (Backend) with PostgreSQL database.
 
 ## Features
 
 - ✅ Create, Read, Update, Delete todos
-- ✅ Mark todos as completed/incomplete
-- ✅ Set priority levels (low, medium, high)
+- ✅ Mark todos as completed
+- ✅ Priority levels (Low, Medium, High)
 - ✅ Search todos by title
-- ✅ PostgreSQL database with Sequelize ORM
-- ✅ React frontend with Tailwind CSS
-- ✅ Custom dropdown components
-- ✅ Responsive design
+- ✅ Responsive design with Tailwind CSS
+- ✅ Real-time updates
+
+## Tech Stack
+
+### Backend
+- **Node.js** - Runtime environment
+- **Express.js** - Web framework
+- **PostgreSQL** - Database
+- **Sequelize** - ORM
+- **CORS** - Cross-origin resource sharing
+
+### Frontend
+- **React 19** - UI library
+- **Vite** - Build tool
+- **Tailwind CSS** - Styling
+- **Axios** - HTTP client
+- **React Icons** - Icon library
+
+## Prerequisites
+
+Before running this application, make sure you have the following installed:
+
+- **Node.js** (v18 or higher)
+- **PostgreSQL** (v12 or higher)
+- **npm** or **pnpm** (package manager)
+
+## Installation & Setup
+
+### Quick Start (Recommended)
+
+```bash
+git clone <repository-url>
+cd todo_app
+chmod +x setup.sh
+./setup.sh
+```
+
+### Manual Setup
+
+### 1. Clone the Repository
+
+```bash
+git clone <repository-url>
+cd todo_app
+```
+
+### 2. Backend Setup
+
+#### Navigate to backend directory
+```bash
+cd backend
+```
+
+#### Install dependencies
+```bash
+npm install
+# or
+pnpm install
+```
+
+#### Database Setup
+
+1. **Create PostgreSQL Database**
+   ```sql
+   CREATE DATABASE todo_app;
+   ```
+
+   **Note:** Tables will be automatically created when you start the backend server. Sequelize ORM handles table creation based on the model definitions.
+
+2. **Create Environment File**
+   Create a `.env` file in the `backend` directory:
+   ```env
+   PORT=5000
+   DB_NAME=todo_app
+   DB_USER=your_postgres_username
+   DB_PASS=your_postgres_password
+   DB_HOST=localhost
+   DB_DIALECT=postgres
+   ```
+
+   **Note**: Replace `your_postgres_username` and `your_postgres_password` with your actual PostgreSQL credentials.
+
+#### Start the Backend Server
+```bash
+# Development mode (with auto-reload)
+npm run dev
+
+# Production mode
+npm start
+```
+
+The backend server will start on `http://localhost:5000`
+
+### 3. Frontend Setup
+
+#### Navigate to frontend directory
+```bash
+cd ../frontend
+```
+
+#### Install dependencies
+```bash
+npm install
+# or
+pnpm install
+```
+
+#### Start the Frontend Development Server
+```bash
+npm run dev
+```
+
+The frontend application will start on `http://localhost:5173`
+
+## API Endpoints
+
+### Todos
+- `GET /todos` - Get all todos
+- `GET /todos/:id` - Get todo by ID
+- `POST /todos` - Create new todo
+- `PUT /todos/:id` - Update todo
+- `DELETE /todos/:id` - Delete todo
+
+### Request/Response Examples
+
+#### Create Todo
+```bash
+POST /todos
+Content-Type: application/json
+
+{
+  "title": "Complete project",
+  "description": "Finish the todo app project",
+  "priority": "high"
+}
+```
+
+#### Update Todo
+```bash
+PUT /todos/1
+Content-Type: application/json
+
+{
+  "title": "Updated title",
+  "description": "Updated description",
+  "priority": "medium",
+  "completed": true
+}
+```
+
+## Project Structure
+
+```
+todo_app/
+├── backend/
+│   ├── app/
+│   │   ├── config/
+│   │   │   └── db.js          # Database configuration
+│   │   ├── controllers/
+│   │   │   └── todo.controller.js  # Todo CRUD operations
+│   │   ├── models/
+│   │   │   └── todo.model.js       # Todo model definition
+│   │   └── routes/
+│   │       └── todo.route.js       # Todo routes
+│   ├── index.js                     # Server entry point
+│   └── package.json
+├── frontend/
+│   ├── src/
+│   │   ├── components/
+│   │   │   ├── AddTodo.jsx          # Add/Edit todo form
+│   │   │   ├── CustomDropdown.jsx   # Priority dropdown
+│   │   │   ├── Filters.jsx          # Search functionality
+│   │   │   ├── TodoItem.jsx         # Individual todo item
+│   │   │   └── index.js             # Component exports
+│   │   ├── App.jsx                  # Main application component
+│   │   ├── main.jsx                 # React entry point
+│   │   └── index.css                # Global styles
+│   ├── index.html
+│   └── package.json
+└── README.md
+```
+
+## Database Schema
+
+### Todo Table
+```sql
+CREATE TABLE "Todos" (
+  "id" SERIAL PRIMARY KEY,
+  "title" VARCHAR(255) NOT NULL,
+  "description" TEXT NOT NULL,
+  "priority" VARCHAR(255),
+  "completed" BOOLEAN DEFAULT false,
+  "createdAt" TIMESTAMP NOT NULL DEFAULT NOW(),
+  "updatedAt" TIMESTAMP NOT NULL DEFAULT NOW()
+);
+```
+
+## Available Scripts
+
+### Backend
+- `npm start` - Start production server
+- `npm run dev` - Start development server with nodemon
+
+### Frontend
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run preview` - Preview production build
+- `npm run lint` - Run ESLint
+
+## Troubleshooting
+
+### Common Issues
+
+1. **Database Connection Error**
+   - Ensure PostgreSQL is running
+   - Verify database credentials in `.env` file
+   - Check if database exists
+
+2. **Port Already in Use**
+   - Change PORT in `.env` file
+   - Kill process using the port: `lsof -ti:5000 | xargs kill -9`
+
+3. **CORS Error**
+   - Ensure backend is running on correct port
+   - Check if frontend URL is allowed in CORS configuration
+
+4. **Module Not Found**
+   - Run `npm install` in both backend and frontend directories
+   - Clear node_modules and reinstall: `rm -rf node_modules && npm install`
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature-name`
+3. Commit changes: `git commit -m 'Add feature'`
+4. Push to branch: `git push origin feature-name`
+5. Submit a pull request
+
+## License
+
+This project is licensed under the ISC License.
 
